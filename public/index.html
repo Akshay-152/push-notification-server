@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101828">
+  <meta name="description" content="Subscribe to browser push notifications - no account needed.">
+  <title>Notifications — Stay in the loop</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <img src="/icons/icon-192.png" alt="" width="32" height="32">
+        <span>NotifyMe</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/admin-login.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Never miss an update</h1>
+      <p class="lede">
+        Get notified about <strong>news, product updates and security alerts</strong>
+        from this site — even when it isn't open in your browser.
+      </p>
+
+      <ul class="perks">
+        <li>Release notes &amp; feature announcements</li>
+        <li>Important account or security notices</li>
+        <li>Occasional highlights — never spam</li>
+      </ul>
+
+      <div class="card status-card" id="status-card" aria-live="polite">
+        <div class="status-row">
+          <span class="status-dot" id="status-dot" data-state="unknown"></span>
+          <div>
+            <h2 class="status-title" id="status-title">Checking status…</h2>
+            <p class="status-detail" id="status-detail">Looking up your notification settings.</p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="enable-btn" hidden>
+            Enable notifications
+          </button>
+          <button class="btn btn-danger" id="disable-btn" hidden>
+            Unsubscribe
+          </button>
+          <button class="btn btn-ghost" id="refresh-btn">
+            Check status
+          </button>
+        </div>
+
+        <p class="notice notice-warning" id="denied-notice" hidden>
+          Notifications are <strong>blocked</strong> for this site. To turn them on,
+          open your browser's site settings (the lock icon or menu next to the address
+          bar), find <em>Notifications</em>, and choose <strong>Allow</strong>,
+          then reload this page.
+        </p>
+
+        <p class="notice notice-error" id="error-notice" hidden></p>
+        <p class="notice notice-success" id="success-notice" hidden></p>
+
+        <p class="loading" id="loading-notice" hidden>
+          <span class="spinner" aria-hidden="true"></span> Working…
+        </p>
+      </div>
+
+      <p class="fineprint">
+        We ask permission only when you click the button above.
+        You can unsubscribe at any time — see our
+        <a href="/privacy.html">privacy policy</a> for details on what we store.
+      </p>
+    </section>
+
+    <section class="info-grid">
+      <div class="info-item">
+        <h3>How it works</h3>
+        <p>Your browser creates an encrypted subscription that only this site can
+        use to send you messages. Notifications arrive through your browser's
+        push service.</p>
+      </div>
+      <div class="info-item">
+        <h3>What we store</h3>
+        <p>An anonymous subscription record — a delivery address and encryption
+        keys. No account, no email, no personal profile. See the
+        <a href="/privacy.html">privacy policy</a>.</p>
+      </div>
+      <div class="info-item">
+        <h3>Works offline</h3>
+        <p>Notifications are delivered by your browser even when this site is
+        closed, provided your browser and OS support background push.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> NotifyMe · <a href="/privacy.html">Privacy</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/subscribe.js"></script>
+</body>
+</html>

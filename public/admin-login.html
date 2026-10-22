@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101828">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin sign in — Notifications</title>
+  <link rel="icon" href="/icons/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <main class="login-wrap">
+    <form class="card login-card" id="login-form" novalidate>
+      <div class="login-brand">
+        <img src="/icons/icon-192.png" alt="" width="40" height="40">
+        <h1>Admin sign in</h1>
+        <p class="muted">Send and manage push notifications.</p>
+      </div>
+
+      <label class="field">
+        <span>Username</span>
+        <input type="text" id="username" name="username" autocomplete="username"
+               maxlength="64" required autofocus>
+      </label>
+
+      <label class="field">
+        <span>Password</span>
+        <input type="password" id="password" name="password"
+               autocomplete="current-password" maxlength="128" required>
+      </label>
+
+      <p class="notice notice-error" id="login-error" hidden></p>
+      <p class="loading" id="login-loading" hidden>
+        <span class="spinner" aria-hidden="true"></span> Signing in…
+      </p>
+
+      <button class="btn btn-primary btn-block" type="submit" id="login-btn">
+        Sign in
+      </button>
+
+      <p class="fineprint"><a href="/">← Back to site</a></p>
+    </form>
+  </main>
+  <script type="module" src="/js/login.js"></script>
+</body>
+</html>

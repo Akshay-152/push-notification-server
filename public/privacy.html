@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101828">
+  <title>Privacy Policy — Notifications</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <img src="/icons/icon-192.png" alt="" width="32" height="32">
+        <span>NotifyMe</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/privacy.html" aria-current="page">Privacy</a>
+        <a href="/admin-login.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container narrow">
+    <article class="prose">
+      <h1>Privacy Policy</h1>
+      <p class="lede">Last updated: October 2026</p>
+
+      <h2>What push notifications are</h2>
+      <p>
+        When you enable notifications, your browser creates a <strong>push
+        subscription</strong>: a randomly generated delivery address hosted by
+        your browser vendor's push service (for example Mozilla's or Apple's),
+        plus encryption keys. We store that subscription so we can send you
+        messages. The messages are encrypted end-to-end: only your browser can
+        read them.
+      </p>
+
+      <h2>What we store</h2>
+      <ul>
+        <li>The push subscription endpoint and its encryption keys.</li>
+        <li>An anonymous random identifier (a cookie) that lets <em>this
+          browser</em> manage its own subscription — unsubscribe, check status.</li>
+        <li>Your browser's user-agent string and subscription timestamps.</li>
+        <li>Delivery outcome records (accepted / failed) for our own statistics.
+          These never contain the message content of anything you read — only
+          whether the push service accepted a message for your subscription.</li>
+      </ul>
+
+      <h2>What we do not store</h2>
+      <ul>
+        <li>No name, email address, or account — subscriptions are anonymous.</li>
+        <li>No precise location or device fingerprinting.</li>
+        <li>We never sell or share subscription data with third parties.</li>
+      </ul>
+
+      <h2>Purpose</h2>
+      <p>We use subscriptions solely to deliver the notifications you agreed to
+      receive and to keep our subscriber statistics accurate (for example,
+      removing subscriptions that no longer exist).</p>
+
+      <h2>Retention &amp; deletion</h2>
+      <p>
+        Subscriptions are removed automatically once they expire or are reported
+        gone by the push service. You can delete yours instantly with the
+        <strong>Unsubscribe</strong> button on the
+        <a href="/">home page</a>, which removes it from our database and
+        unsubscribes your browser.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>We use two strictly necessary cookies: your browser session for
+      administrators, and the anonymous subscription identifier described above.
+      No tracking or advertising cookies are used.</p>
+
+      <h2>Contact</h2>
+      <p>Questions? Contact <strong>admin@example.com</strong>.</p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 NotifyMe · <a href="/">Home</a></p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101828">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard — Notifications</title>
+  <link rel="icon" href="/icons/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <div class="admin-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/">
+        <img src="/icons/icon-192.png" alt="" width="28" height="28">
+        <span>NotifyMe</span>
+      </a>
+
+      <nav class="side-nav" aria-label="Dashboard">
+        <button type="button" data-view="overview" class="active">Overview</button>
+        <button type="button" data-view="compose">Compose</button>
+        <button type="button" data-view="subscribers">Subscribers</button>
+        <button type="button" data-view="history">History</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p class="who">Signed in as <strong id="admin-name">…</strong></p>
+        <button type="button" class="btn btn-ghost btn-sm" id="logout-btn">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- ================================================== OVERVIEW == -->
+      <section class="view" id="view-overview">
+        <div class="page-head">
+          <div>
+            <h1>Overview</h1>
+            <p class="sub">Delivery statistics and recent activity</p>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" id="overview-refresh">Refresh</button>
+        </div>
+
+        <div class="stats" id="stat-cards"></div>
+
+        <div class="panel">
+          <h2>New subscriptions — last 14 days</h2>
+          <div class="chart" id="trend-chart" aria-hidden="true"></div>
+          <div class="chart-labels" id="trend-labels"></div>
+          <p class="empty" id="trend-empty" hidden>No subscriptions in this period.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Recent notifications</h2>
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Title</th><th>Sent by</th><th>Created</th>
+                  <th>Status</th><th class="num">Accepted</th><th class="num">Failed</th>
+                </tr>
+              </thead>
+              <tbody id="recent-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================== COMPOSE == -->
+      <section class="view" id="view-compose" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Compose notification</h1>
+            <p class="sub">Send a push message to every active subscriber</p>
+          </div>
+        </div>
+
+        <div class="compose-grid">
+          <form class="panel" id="compose-form" novalidate>
+            <label class="field">
+              <span>Title <em class="counter" id="title-count">0/80</em></span>
+              <input type="text" id="f-title" maxlength="80" required
+                     placeholder="New release available">
+            </label>
+
+            <label class="field">
+              <span>Message <em class="counter" id="body-count">0/300</em></span>
+              <textarea id="f-body" rows="4" maxlength="300" required
+                        placeholder="Version 2.0 is live — see what's new."></textarea>
+            </label>
+
+            <label class="field">
+              <span>Destination URL or path</span>
+              <input type="text" id="f-url" maxlength="2048" value="/" required
+                     placeholder="/blog/new-release">
+              <em class="hint">Internal path (e.g. /page) or an absolute URL on this site.
+                Clicking the notification opens it.</em>
+            </label>
+
+            <label class="field">
+              <span>Icon URL (optional)</span>
+              <input type="text" id="f-icon" maxlength="2048" placeholder="/icons/icon-192.png">
+            </label>
+
+            <label class="field">
+              <span>Tag (optional)</span>
+              <input type="text" id="f-tag" maxlength="64" placeholder="release-2.0">
+              <em class="hint">Notifications with the same tag replace each other
+                instead of stacking (duplicate suppression).</em>
+            </label>
+
+            <label class="field">
+              <span>Schedule (optional)</span>
+              <input type="datetime-local" id="f-schedule">
+              <em class="hint">Leave empty to send immediately. Scheduled sends are
+                stored in the database and survive server restarts.</em>
+            </label>
+
+            <p class="notice notice-error" id="compose-error" hidden></p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="send-btn">Review &amp; send…</button>
+              <button type="button" class="btn btn-ghost" id="clear-btn">Clear</button>
+            </div>
+
+            <div class="confirm-box" id="confirm-box" hidden>
+              <h3>Confirm send</h3>
+              <p id="confirm-text">Send this notification to all active subscribers?</p>
+              <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="confirm-send">Yes, send now</button>
+                <button type="button" class="btn btn-ghost" id="confirm-cancel">Cancel</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="panel" id="preview-panel">
+            <h2>Preview</h2>
+            <div class="preview">
+              <img src="/icons/icon-192.png" alt="" id="pv-icon">
+              <div>
+                <div class="pv-title" id="pv-title">Your notification title</div>
+                <div class="pv-body" id="pv-body">Your message will appear here.</div>
+                <div class="pv-url" id="pv-url">/</div>
+              </div>
+            </div>
+
+            <div class="progress-box" id="progress-box" hidden>
+              <h3 id="progress-title">Sending…</h3>
+              <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+              <p id="progress-text">Waiting for the delivery job…</p>
+              <div class="result-grid" id="result-grid" hidden></div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-danger btn-sm" id="cancel-send" hidden>
+                  Cancel sending
+                </button>
+              </div>
+            </div>
+
+            <p class="notice notice-info" id="compose-info" hidden></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================== SUBSCRIBERS == -->
+      <section class="view" id="view-subscribers" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Subscribers</h1>
+            <p class="sub" id="subs-counts">…</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar">
+            <input type="search" id="subs-search" placeholder="Search endpoint / browser…" aria-label="Search subscribers">
+            <select id="subs-status" aria-label="Filter by status">
+              <option value="all">All statuses</option>
+              <option value="active">Active only</option>
+              <option value="inactive">Inactive only</option>
+            </select>
+            <span class="spacer"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="subs-cleanup">
+              Clean up expired…
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>#</th><th>Subscription (masked)</th><th>Status</th>
+                  <th>Created</th><th>Last accepted</th><th>Browser</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="subs-body"></tbody>
+            </table>
+          </div>
+
+          <div class="pager">
+            <button type="button" class="btn btn-ghost btn-sm" id="subs-prev">← Prev</button>
+            <span id="subs-page-info">Page 1</span>
+            <span class="spacer"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="subs-next">Next →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================== HISTORY == -->
+      <section class="view" id="view-history" hidden>
+        <div class="page-head">
+          <div>
+            <h1>Notification history</h1>
+            <p class="sub">Every send, its author and delivery results</p>
+          </div>
+        </div>
+
+        <div class="panel" id="history-list-panel">
+          <div class="toolbar">
+            <input type="search" id="hist-search" placeholder="Search title / message…" aria-label="Search notifications">
+            <span class="spacer"></span>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>#</th><th>Title</th><th>Sent by</th><th>Created</th>
+                  <th>Status</th><th class="num">Accepted</th><th class="num">Failed</th>
+                </tr>
+              </thead>
+              <tbody id="hist-body"></tbody>
+            </table>
+          </div>
+
+          <div class="pager">
+            <button type="button" class="btn btn-ghost btn-sm" id="hist-prev">← Prev</button>
+            <span id="hist-page-info">Page 1</span>
+            <span class="spacer"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="hist-next">Next →</button>
+          </div>
+        </div>
+
+        <div class="panel" id="history-detail-panel" hidden>
+          <div class="detail-head">
+            <button type="button" class="btn btn-ghost btn-sm" id="detail-back">← Back</button>
+            <h2 id="detail-title" style="margin:0"></h2>
+            <span id="detail-status"></span>
+          </div>
+
+          <dl class="kv" id="detail-kv"></dl>
+
+          <div class="result-grid" id="detail-counts"></div>
+
+          <div class="toolbar" style="margin-top:1rem">
+            <label class="muted" for="detail-filter" style="font-size:.85rem">Filter:</label>
+            <select id="detail-filter">
+              <option value="all">All attempts</option>
+              <option value="accepted">Accepted only</option>
+              <option value="failed">Failed only</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Subscription</th><th>Result</th><th>HTTP</th>
+                  <th>Attempts</th><th>Last attempt</th><th>Detail</th>
+                </tr>
+              </thead>
+              <tbody id="detail-body"></tbody>
+            </table>
+          </div>
+
+          <div class="pager">
+            <button type="button" class="btn btn-ghost btn-sm" id="detail-prev">← Prev</button>
+            <span id="detail-page-info">Page 1</span>
+            <span class="spacer"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="detail-next">Next →</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

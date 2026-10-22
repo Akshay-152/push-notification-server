@@ -1,0 +1,27 @@
+{
+  "name": "web-push-system",
+  "version": "1.0.0",
+  "description": "Self-hosted web push notification system using native Web Push (no Firebase, no SaaS)",
+  "type": "module",
+  "private": true,
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "migrate": "node scripts/migrate.js",
+    "generate:vapid": "node scripts/generate-vapid-keys.js",
+    "create:admin": "node scripts/create-admin.js",
+    "test": "node --test --test-concurrency=1 \"tests/*.test.js\""
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.0.2",
+    "better-sqlite3": "^12.2.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "web-push": "^3.6.7"
+  }
+}
